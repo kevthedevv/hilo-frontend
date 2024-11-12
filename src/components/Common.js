@@ -16,7 +16,6 @@ const StyledButton = styled(Button)`
 `;
 
 const StyledTextField = styled(TextField)`
-     margin-bottom: 10px; // Add margin at the bottom
      background-color: #1C2E4A; // Set background color to white
 
      & .MuiInputBase-input {

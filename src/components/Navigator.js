@@ -2,6 +2,7 @@ import React from 'react'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
 import Registration from '../pages/Registration'
+import Hilo from '../pages/Hilo'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
@@ -28,6 +29,10 @@ const Navigator = () => {
             <Route
                 path="/dashboard"
                 element={user ? <Dashboard /> : <Navigate to="/login" />}
+            />
+             <Route
+                path="/hilo"
+                element={user ? <Hilo /> : <Navigate to="/login" />}
             />
         </Routes>
 

@@ -38,10 +38,6 @@ const TermsCheckbox = styled(FormControlLabel)`
     }
 `;
 
-
-
-
-
 const Registration = () => {
 
   const navigate = useNavigate()

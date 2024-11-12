@@ -12,6 +12,7 @@ import Wallpaper from '../images/wallpaper.jpg'
 import MainHeader from '../components/MainHeader';
 import Winner from '../images/winner.jpg'
 import Hilo from '../images/hilo.jpg'
+import { useNavigate } from 'react-router-dom';
 
 
 const Background = styled.div`
@@ -48,6 +49,7 @@ const GameIcon = styled.img`
   &:hover {
         transform: scale(1.05); /* Scale the image slightly on hover */
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Optional: change box-shadow on hover */
+        cursor: pointer;
     }
 `;
 
@@ -61,7 +63,7 @@ const Content = styled.div`
 `;
 
 const Dashboard = () => {
-
+     const navigate = useNavigate()
      return (
           <Background>
                <MainHeader />
@@ -71,7 +73,7 @@ const Dashboard = () => {
                     <hr style={{ marginBottom: "30px", borderColor: "gray" }} />
                     <GamesContainer>
                          <GameIconContainer>
-                              <GameIcon src={Hilo} alt='Hilo Icon' />
+                              <GameIcon src={Hilo} alt='Hilo Icon' onClick={() => navigate('/hilo')} />
                          </GameIconContainer>
                          <GameIconContainer>
                               <GameIcon src={Winner} alt='Hilo Icon' />
