@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styled, { keyframes, css } from 'styled-components';
+import styled from 'styled-components'
 import TextField from '@mui/material/TextField';
 import { StyledButton, StyledTextField } from '../components/Common';
 import Checkbox from '@mui/material/Checkbox';
@@ -56,7 +56,6 @@ const GameRow1 = styled.div`
      border-radius: 20px;
      display: flex;
      justify-content: center;
-     align-items: center;
      color: #B3BAC2;
      padding: 20px;
 `
@@ -123,60 +122,20 @@ const ButtonLower = styled.button`
         opacity: 1;  // Slightly increase opacity on hover
     }
 `;
-const glowBlue = keyframes`
-  0% {
-    box-shadow: 0 0 10px skyblue, 0 0 20px skyblue, 0 0 30px skyblue, 0 0 40px skyblue;
-  }
-  50% {
-    box-shadow: 0 0 20px skyblue, 0 0 30px skyblue, 0 0 40px skyblue, 0 0 50px skyblue;
-  }
-  100% {
-    box-shadow: 0 0 10px skyblue, 0 0 20px skyblue, 0 0 30px skyblue, 0 0 40px skyblue;
-  }
-`;
-const glowRed = keyframes`
-  0% {
-    box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
-  }
-  50% {
-    box-shadow: 0 0 20px red, 0 0 30px red, 0 0 40px red, 0 0 50px red;
-  }
-  100% {
-    box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
-  }
-`;
-const glowWhite = keyframes`
-  0% {
-    box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px white;
-  }
-  50% {
-    box-shadow: 0 0 20px white, 0 0 30px white, 0 0 40px white, 0 0 50px white;
-  }
-  100% {
-    box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px white;
-  }
-`;
 
 const TotalHighBetContainer = styled.div`
-  border: solid gray 1px;
-  border-radius: 10px;
-  margin-top: 10px;
-  height: 90px;
-  width: 350px;
-  background-color: #181a63;
-  opacity: 0.7;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  color: white;
-
-  /* Conditional styling for glowing effect */
-  ${(props) =>
-          props.result === "higher" &&
-          css`
-      animation: ${glowBlue} 1s ease-in-out;
-    `}
-`;
+   border: solid gray 1px;
+   border-radius: 10px;
+   margin-top: 10px;
+   height: 90px;
+   width: 350px;
+   background-color: #181a63;
+   opacity: 0.7;
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+   color: white;
+`
 const TotalLowBetContainer = styled.div`
    border: solid gray 1px;
    border-radius: 10px;
@@ -189,29 +148,7 @@ const TotalLowBetContainer = styled.div`
    justify-content: space-around;
    align-items: center;
    color: white;
-   ${(props) =>
-          props.result === "lower" &&
-          css`
-      animation: ${glowRed} 2s ease-in-out;
-    `}
-`;
-
-const CurrentResultCircles = styled.div`
-  border: solid #394D65 1px;
-  border-radius: 50%; /* Use 50% to create a circular shape */
-  height: 50px;
-  width: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: black;
-  background: linear-gradient(to right, #FF5733, #FFC300);
-  ${(props) =>
-          props.glow &&
-          css`
-      animation: ${glowWhite} 2s ease-in-out;
-    `}
-`;
+`
 
 const Hilo = () => {
      const [gameId, setgameId] = useState('');
@@ -225,10 +162,8 @@ const Hilo = () => {
      const [potentialWinningsLow, setPotentialWinningsLow] = useState(0);
      const [recentBetType, setRecentBetType] = useState("")
      const [totalBetsPerGame, settotalBetsPerGame] = useState(0);
-     const [glow, setGlow] = useState(false);
 
-
-
+     const [seconds, setSeconds] = useState(60);
      const [drawMessage, setDrawMessage] = useState("");
      const [result, setResult] = useState("");
      const [showResult, setShowResult] = useState(false);
@@ -239,7 +174,7 @@ const Hilo = () => {
      const [prevsecondDigit, setPrevSecondDigit] = useState("")
      const [prevthirdDigit, setPrevThirdDigit] = useState("")
      const [gameData, setGameData] = useState(null);
-     const [currentNumber, setCurrentNumber] = useState(0);
+     const [currentNumber, setCurrentNumber] = useState("");
      const [isRumbling, setIsRumbling] = useState(false);
      const [isGameStart, setisGameStart] = useState(false)
      const [isButtonDisabled, setisButtonDisabled] = useState(false);
@@ -247,22 +182,17 @@ const Hilo = () => {
 
 
      //Socket IO
-     const [newGame, setNewGame] = useState(null); //NEW GAME ID
+     const [newGame, setNewGame] = useState(null);
      const [betData, setBetData] = useState(null);
      const [gameResult, setGameResult] = useState(null);
-     const [seconds, setSeconds] = useState(60); // Timer state
-     const [currentGameId, setCurrentGameId] = useState(null);
-     const [restartGame, setrestartGame] = useState(false);
-
-     useEffect(() => {
-          handleStartGame();
-     }, [username])
+     
+     
 
      useEffect(() => {
           // Listen for newGame event and update state
           socket.on('newGame', (data) => {
                console.log('New game started', data);
-               setNewGame(data);
+               setNewGame(data); // Save new game data in state
           });
 
           // Listen for betPlaced event and update state
@@ -272,148 +202,18 @@ const Hilo = () => {
           });
 
           // Listen for gameResult event and update state
-          // socket.on('gameResult', (data) => {
-          //      console.log('Game result', data);
-          //      setGameResult(data); // Save game result data in state
-          // });
-
-          socket.on('timerUpdate', (data) => {
-               setSeconds(data.seconds); // Update the timer
+          socket.on('gameResult', (data) => {
+               console.log('Game result', data);
+               setGameResult(data); // Save game result data in state
           });
-
-          socket.on('restartTimer', (data) => {
-               setrestartGame(data); // Save game result data in state
-               setSeconds(60);
-          });
-
 
           // Cleanup listeners when the component unmounts
           return () => {
                socket.off('newGame');
                socket.off('betPlaced');
-               //socket.off('gameResult');
-               socket.off('timerUpdate');
-               socket.off('restartTimer');
+               socket.off('gameResult');
           };
      }, []);
-
-     useEffect(() => {
-          if (firstDigit !== "") {
-               setGlow(true);
-               setTimeout(() => {
-                    setGlow(false);
-               }, 2000); // 2 seconds duration
-          }
-          if (secondDigit !== "") {
-               setGlow(true);
-               setTimeout(() => {
-                    setGlow(false);
-               }, 2000); // 2 seconds duration
-          }
-          if (thirdDigit !== "") {
-               setGlow(true);
-               setTimeout(() => {
-                    setGlow(false);
-               }, 2000); // 2 seconds duration
-          }
-     }, [firstDigit,secondDigit,thirdDigit])
-     //handleNewGame
-     // useEffect(() => {
-     //      const startGame = async () => {
-     //           try {
-     //                const response = await fetch('http://localhost:4000/api/hilo/start-game', {
-     //                     method: 'POST', 
-     //                     headers: {
-     //                          'Content-Type': 'application/json', 
-     //                     },
-     //                });
-     //                const data = await response.json();  
-     //                setGameData(data); //{game_id, message}
-
-
-
-     //                if (data && data.game_id) {
-     //                     setgameId(data.game_id);
-     //                     socket.emit('newGame', { game_id: data.game_id }); //send this to Server to start the timer
-
-     //                }
-     //           } catch (error) {
-     //                setError('Error starting game');
-     //                console.error('Error starting game:', error);
-     //           }
-     //      };
-
-     //      if (isGameStart) {
-     //           startGame();  // Call startGame when isGameStart is true
-     //      }
-
-     // }, [isGameStart]);
-
-     // const handleStartGame = async (e) => {
-     //      e.preventDefault();
-     //      setisGameStart(true);
-     // }
-     const handleStartGame = async () => {
-          try {
-               const response = await fetch('http://localhost:4000/api/hilo/start-game', {
-                    method: 'POST',
-                    headers: {
-                         'Content-Type': 'application/json',
-                    },
-               });
-               const data = await response.json();
-               setgameId(data.game_id);
-               socket.emit('newGame', { game_id: data.game_id }); // Send game ID to server to start the timer
-          } catch (error) {
-               setError('Error starting game');
-               console.error('Error starting game:', error);
-          }
-     };
-
-
-
-     useEffect(() => {
-          const updateGameResult = async () => {
-               try {
-                    const result = {
-                         game_id: gameId,
-                         first_digit: firstDigit,
-                         second_digit: secondDigit,
-                         third_digit: thirdDigit,
-                    };
-
-                    const response = await fetch('http://localhost:4000/api/hilo/update-game', {
-                         method: 'PATCH',
-                         body: JSON.stringify(result),
-                         headers: {
-                              'Content-Type': 'application/json',
-                         },
-                    });
-
-                    if (response.ok) {
-                         const data = await response.json();
-                         setError(null); // Clear any previous errors
-                         setPrevFirstDigit(data.first_digit)
-                         setPrevSecondDigit(data.second_digit)
-                         setPrevThirdDigit(data.third_digit)
-                         console.log(data)
-                    } else {
-                         const errMessage = await response.json();
-                         setError(errMessage.message || 'Failed to update game');
-                    }
-               } catch (error) {
-                    setError('Error updating the game: ' + error.message);
-               }
-          };
-
-          // Only run when all three digits are non-zero
-          if (gameId && firstDigit !== 0 && secondDigit !== 0 && thirdDigit !== 0) {
-               updateGameResult();
-          }
-     }, [firstDigit, secondDigit, thirdDigit]);
-
-
-
 
      const handlePlaceBet = async (betType) => {
           if (!betAmount || !username) {
@@ -430,7 +230,7 @@ const Hilo = () => {
                };
 
                const response = await fetch('http://localhost:4000/api/hilo/place-bet', {
-                    method: 'UPDATE', // Update the game with the new bet
+                    method: 'POST', // Update the game with the new bet
                     headers: {
                          'Content-Type': 'application/json',
                     },
@@ -482,9 +282,24 @@ const Hilo = () => {
      };
 
      useEffect(() => {
+          if (isGameStart) {
+               // Main countdown for seconds
+               const interval = setInterval(() => {
+                    setSeconds(prevSeconds => prevSeconds - 1);
+               }, 1000);
+
+               return () => clearInterval(interval);  // Cleanup on unmount
+          }
+     }, [isGameStart]);
+
+
+     useEffect(() => {
           if (seconds <= 0) {
+               setSeconds(60);
                setisGameStart(false)
-               setCurrentNumber("-");
+               setPrevFirstDigit(firstDigit)
+               setPrevSecondDigit(secondDigit)
+               setPrevThirdDigit(thirdDigit)
           }
 
           //Update draw message based on remaining seconds
@@ -528,7 +343,7 @@ const Hilo = () => {
 
           } else if (seconds <= 10 && seconds > 1) {
                if (seconds === 10) {
-                    console.log(firstDigit + " " + secondDigit + " " + thirdDigit)
+
                     setShowResult(true)
                     const combinedPrevious = prevfirstDigit * 100 + prevsecondDigit * 10 + prevthirdDigit;
                     const combinedCurrent = firstDigit * 100 + secondDigit * 10 + thirdDigit;
@@ -550,8 +365,8 @@ const Hilo = () => {
 
           else {
                setShowResult(false)
-
                setDrawMessage(`Betting now opened! Draw will start in ${seconds - 40}`)
+
                setFirstDigit("") // Message when seconds are above 10
                setSecondDigit("")
                setThirdDigit("")
@@ -579,6 +394,50 @@ const Hilo = () => {
 
 
 
+     useEffect(() => {
+          // Trigger game start when isGameStart becomes true
+          const startGame = async () => {
+               try {
+                    const response = await fetch('http://localhost:4000/api/hilo/start-game', {
+                         method: 'POST', // Use POST method if you're sending data
+                         headers: {
+                              'Content-Type': 'application/json', // Ensure you're sending JSON
+                         },
+                    });
+
+                    const data = await response.json();  // Parse JSON response
+
+                    setGameData(data);  // Store the game data in state
+                    console.log('Game started:', data);
+
+
+                    if (data && data.game_id) {
+                         console.log('Game ID:', data.game_id);
+                         setgameId(data.game_id);
+                    }
+               } catch (error) {
+                    setError('Error starting game');
+                    console.error('Error starting game:', error);
+               }
+          };
+
+          if (isGameStart) {
+               startGame();  // Call startGame when isGameStart is true
+          }
+
+     }, [isGameStart]);
+
+
+     const handleStartGame = async (e) => {
+          e.preventDefault();
+          setisGameStart(true);
+     }
+
+
+
+
+
+
 
 
      return (
@@ -588,9 +447,11 @@ const Hilo = () => {
                <Content>
                     <GameContainer>
                          <GameRow1>
-                              <h4 style={{ margin: 0, fontWeight: 600, fontSize: "25px", textTransform: "uppercase" }}>
-                                   {drawMessage}
-                              </h4>
+
+                              <div style={{ display: "flex", justifyContent: "center" }}>
+                                   <h5 style={{ textTransform: "uppercase", marginRight: "10px" }}>Next Game will start in: </h5>
+                                   <h5 style={{ color: "white" }}>{seconds}</h5>
+                              </div>
                          </GameRow1>
                          <GameRow2>
                               <div>
@@ -612,27 +473,52 @@ const Hilo = () => {
                                              }}>
                                              <h4 style={{ margin: 0, padding: 0, fontWeight: 400 }}>Current Result</h4>
                                              <div style={{ display: "flex", gap: 10, paddingTop: "30px" }}>
-                                                  <CurrentResultCircles glow={glow}>
+                                                  <div style={{
+                                                       border: "solid #394D65 1px",
+                                                       borderRadius: "100%",
+                                                       height: "50px",
+                                                       width: "50px",
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       color: "black",
+                                                       background: "linear-gradient(to right, #FF5733, #FFC300)"
+
+                                                  }}>
                                                        <h3>{firstDigit}</h3>
-                                                  </CurrentResultCircles>
+                                                  </div>
 
-
-
-                                                  <CurrentResultCircles glow={glow}>
+                                                  <div style={{
+                                                       border: "solid #394D65 1px",
+                                                       borderRadius: "100%",
+                                                       height: "50px",
+                                                       width: "50px",
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       color: "black",
+                                                       background: "linear-gradient(to right, #FF5733, #FFC300)"
+                                                  }}>
                                                        <h3>{secondDigit}</h3>
-                                                  </CurrentResultCircles>
+                                                  </div>
 
-
-
-                                                  <CurrentResultCircles glow={glow}>
+                                                  <div style={{
+                                                       border: "solid #394D65 1px",
+                                                       borderRadius: "100%",
+                                                       height: "50px",
+                                                       width: "50px",
+                                                       display: "flex",
+                                                       color: "black",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       background: "linear-gradient(to right, #FF5733, #FFC300)"
+                                                  }}>
                                                        <h3>{thirdDigit}</h3>
-                                                  </CurrentResultCircles>
-
-
+                                                  </div>
                                              </div>
 
                                         </div>
-                                        <TotalHighBetContainer result={result}>
+                                        <TotalHighBetContainer>
                                              <div>HIGHER BETS</div>
                                              <div>{totalBetsHigh}</div>
                                              <div style={{ color: "gray" }}>{highPercentage}%</div>
@@ -641,25 +527,95 @@ const Hilo = () => {
                                    </div>
                               </div>
                               <div>
-                                   <div
-                                        style={{
-                                             border: "solid gray 1px",
-                                             borderRadius: "10px",
-                                             height: "300px",
-                                             width: "260px",
-                                             opacity: 0.7,
-                                             display: "flex",
-                                             justifyContent: "center",
-                                             alignItems: "center",
-                                             flexDirection: "column",
-                                             color: "white",
-                                             background: "linear-gradient(to right, #FF5733, #FFC300)",
-                                        }}
-                                   >
-                                        <p style={{ margin: 0, padding: 0, fontSize: "100px" }}>
-                                             {currentNumber}
-                                        </p>
-                                   </div>
+
+
+                                   {
+                                        result === "lower" ? (
+                                             <div
+                                                  style={{
+                                                       border: "solid gray 1px",
+                                                       borderRadius: "10px",
+                                                       height: "300px",
+                                                       width: "260px",
+                                                       opacity: 0.7,
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       flexDirection: "column",
+                                                       color: "white",
+                                                       background: "linear-gradient(to right, #380f10, #c40c0c)",
+                                                  }}
+                                             >
+                                                  <h4 style={{ margin: 0, padding: "0px 50px", fontWeight: 400 }}>
+                                                       {drawMessage}
+                                                  </h4>
+                                             </div>
+                                        ) : result === "higher" ? (
+                                             <div
+                                                  style={{
+                                                       border: "solid gray 1px",
+                                                       borderRadius: "10px",
+                                                       height: "300px",
+                                                       width: "260px",
+                                                       opacity: 0.7,
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       flexDirection: "column",
+                                                       color: "white",
+                                                       background: "linear-gradient(to right, #0f1039, #0c51c4)",
+                                                  }}
+                                             >
+                                                  <h4 style={{ margin: 0, padding: "0px 50px", fontWeight: 400 }}>
+                                                       {drawMessage}
+                                                  </h4>
+                                             </div>
+                                        ) : result === "same" ? (
+                                             <div
+                                                  style={{
+                                                       border: "solid gray 1px",
+                                                       borderRadius: "10px",
+                                                       height: "300px",
+                                                       width: "260px",
+                                                       opacity: 0.7,
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       flexDirection: "column",
+                                                       color: "white",
+                                                       background: "linear-gradient(to right, #303030, #7e7e7e)",
+                                                  }}
+                                             >
+                                                  <h4 style={{ margin: 0, padding: "0px 50px", fontWeight: 400 }}>
+                                                       {drawMessage}
+                                                  </h4>
+                                             </div>
+
+                                        ) : (
+                                             <div
+                                                  style={{
+                                                       border: "solid gray 1px",
+                                                       borderRadius: "10px",
+                                                       height: "300px",
+                                                       width: "260px",
+                                                       opacity: 0.7,
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       flexDirection: "column",
+                                                       color: "white",
+                                                       background: "linear-gradient(to right, #FF5733, #FFC300)",
+                                                  }}
+                                             >
+                                                  <h4 style={{ margin: 0, padding: "0px 50px", fontWeight: 400 }}>
+                                                       {drawMessage}
+                                                  </h4>
+                                                  <p style={{ margin: 0, padding: 0, fontSize: "100px" }}>
+                                                       {currentNumber}
+                                                  </p>
+                                             </div>
+                                        )}
+
                               </div>
                               <div>
                                    <div id="PreviousResult"
@@ -723,7 +679,7 @@ const Hilo = () => {
                                              </div>
                                         </div>
                                    </div>
-                                   <TotalLowBetContainer result="lower">
+                                   <TotalLowBetContainer>
                                         <div>LOWER BETS</div>
                                         <div>{totalBetsLow}</div>
                                         <div style={{ color: "gray" }}>{lowPercentage}%</div>
@@ -779,6 +735,7 @@ const Hilo = () => {
                                         </div>
 
                                    </ButtonHigher>
+                                   <button onClick={handleStartGame}>Start</button>
                                    <ButtonLower onClick={() => handlePlaceBet('low')}>
                                         <div style={{ paddingLeft: "20px", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                                              <h4 style={{ margin: 0, paddingLeft: 0, fontWeight: 400 }}>BET LOWER</h4>

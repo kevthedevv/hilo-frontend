@@ -88,7 +88,11 @@ const Login = () => {
       setLoading(false); // Set loading to false regardless of success or failure
     }
   }
-
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin(e);
+    }
+  };
   const [isChecked, setIsChecked] = useState(false); // State to manage checkbox
 
   const handleCheckboxChange = (event) => {
@@ -108,37 +112,40 @@ const Login = () => {
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <h2 style={{ fontStyle: 'italic', paddingBottom: '30px' }}>Login</h2>
           </div>
+          <form onKeyDown={handleKeyDown}>
 
-          <StyledTextField
-            required
-            id="outlined"
-            label="Username"
-            style={{ marginBottom: "10px" }}
-            fullWidth
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            inputProps={{
-              autoComplete: "off", // Disable autocomplete
-            }}
-          />
-          <StyledTextField
-            required
-            id="outlined"
-            type="password"
-            label="Password"
-            style={{ marginBottom: "10px" }}
-            fullWidth
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            inputProps={{
-              autoComplete: "off", // Disable autocomplete
-            }}
-          />
+            <StyledTextField
+              required
+              id="outlined"
+              label="Username"
+              style={{ marginBottom: "10px" }}
+              fullWidth
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              inputProps={{
+                autoComplete: "off", // Disable autocomplete
+              }}
+            />
+            <StyledTextField
+              required
+              id="outlined"
+              type="password"
+              label="Password"
+              style={{ marginBottom: "10px" }}
+              fullWidth
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              inputProps={{
+                autoComplete: "off", // Disable autocomplete
+              }}
+            />
+          </form>
           <StyledButton style={{ marginTop: "20px" }} onClick={handleLogin}
             disabled={loading} variant='contained'>
             {loading ? 'Logging in. Please wait...' : 'Login'}
 
           </StyledButton>
+
           <Toaster
           />
           <Header />
