@@ -5,8 +5,10 @@ import toast from 'react-hot-toast';
 
 export const useLogin = () => {
      const [error, setError] = useState(null)
+     const [username, setUsername] = useState(null)
      const [isLoading, setIsLoading] = useState(null)
      const { dispatch } = useAuthContext()
+   
 
 
      const login = async (username, password) => {
@@ -33,11 +35,13 @@ export const useLogin = () => {
 
 
                //update AuthContext
-               dispatch({type: 'LOGIN', payload: json})
+               dispatch({type: 'LOGIN', payload: json.username, token: json.token})
 
                setIsLoading(false)
                toast.success('Login successful')
+               setUsername(json.username); 
+               console.log("UUUUUUUUUUUUUUUUUUUSERNAME", username)
           }
      }
-     return { login, isLoading, error }
+     return { login, isLoading, error, username}
 }

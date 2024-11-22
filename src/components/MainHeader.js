@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import Logo from '../images/logo.png'
-import React from 'react';
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useLogout } from '../hooks/useLogout'
-
+import { useAuthContext } from '../context/AuthContext';
+import Hilo from "../pages/Hilo";
 const Container = styled.div`
     height: 70px;
     width: 100%;
@@ -43,35 +44,48 @@ const StyledLink = styled(Link)`
     }
 `;
 
-function MainHeader() {
-     const { logout } = useLogout()
+function MainHeader(props) {
+  
+
+     const { logout } = useLogout();
+     const { user } = useAuthContext(); // Get state from context
+
+     const username = user?.username || 'Guest'; // Access 'user' property from state
      const handleLogout = () => {
-          logout()
-     }
+          logout();
+     };
+
      const location = useLocation();
      console.log('Current pathname:', location.pathname);
+
      return (
           <Container>
-               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <div style={{ paddingLeft: "50px", paddingRight: "20px", paddingTop: "5px" }}>
+               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ paddingLeft: '50px', paddingRight: '20px', paddingTop: '5px' }}>
                          <LogoContainer src={Logo} alt="Logo" />
                     </div>
                     <h3>Bola Swerte</h3>
                </div>
-               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <div style={{ padding: "5px 20px", borderRadius: "50px", backgroundColor: "#1B4569", marginRight: "20px" }}>
-                         Available Balance: P10,000
+               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ padding: '0', marginRight: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                         <p style={{ marginRight: "10px" }}>Welcome,</p><p style={{ color: "orange" }}> {username}</p>  {/* Display username here */}
                     </div>
-                    <div style={{ padding: "0", marginRight: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                         <SettingsIcon /> {/* Adjust negative margin if needed */}
+                    <div style={{ display: "flex", padding: '0 20px', borderRadius: '50px', backgroundColor: '#1B4569', marginRight: '20px', justifyContent: "center", alignItems: "center" }}>
+                         <p style={{ marginRight: "10px" }}>Available Balance</p>{props.balance}
                     </div>
-                    <div style={{ padding: "0", marginRight: "50px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                         <LogoutIcon onClick={handleLogout}/>
+                    <div style={{ padding: '0', marginRight: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                         <SettingsIcon />
+                    </div>
+                    <div style={{ padding: '0', marginRight: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                         <LogoutIcon onClick={handleLogout} />
                     </div>
 
+                    {/* Display username */}
+
                </div>
-          </Container >
+          </Container>
      );
 }
+
 
 export default MainHeader;
